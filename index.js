@@ -9,24 +9,19 @@ const PacienteSchema = new mongoose.Schema({
   nombre: String,
   estado: String
 });
-const Paciente = mongoose.model('Paciente', PacienteSchema, 'pacientes'); // <- colección explícita
 
-// Conexión a MongoDB Atlas
-mongoose.connect('mongodb://jfgomez4224:6iLNFn2UhbuOpktD@ac-ccq6eni-shard-00-00.jnt0kh7.mongodb.net/husi?retryWrites=true&w=majority', {
+// El nombre exacto de la colección es 'Paciente' y la base de datos también
+const Paciente = mongoose.model('Paciente', PacienteSchema, 'Paciente');
+
+// Conexión a la base de datos correcta (Paciente)
+mongoose.connect('mongodb://jfgomez4224:6iLNFn2UhbuOpktD@ac-ccq6eni-shard-00-00.jnt0kh7.mongodb.net/Paciente?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => {
   console.log('✅ Conectado a MongoDB Atlas');
-
-  // Esperar apertura completa
-  mongoose.connection.once('open', () => {
-    console.log('✅ Conexión completamente abierta');
-
-    // Iniciar servidor después de conexión completa
-    app.listen(port, () => {
-      console.log(`Servidor corriendo en puerto ${port}`);
-    });
+  app.listen(port, () => {
+    console.log(`Servidor corriendo en puerto ${port}`);
   });
 })
 .catch(err => {
@@ -38,7 +33,7 @@ app.get('/', (req, res) => {
   res.send('Sistema HUSI funcionando');
 });
 
-// Endpoint de pacientes
+// Endpoint real desde MongoDB
 app.get('/pacientes', async (req, res) => {
   try {
     const pacientes = await Paciente.find();
