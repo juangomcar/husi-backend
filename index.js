@@ -9,7 +9,7 @@ const PacienteSchema = new mongoose.Schema({
   nombre: String,
   estado: String
 });
-const Paciente = mongoose.model('pacientes', PacienteSchema, 'pacientes'); // <- colección explícita
+const Paciente = mongoose.model('Paciente', PacienteSchema, 'pacientes'); // <- colección explícita
 
 // Conexión a MongoDB Atlas
 mongoose.connect('mongodb://jfgomez4224:6iLNFn2UhbuOpktD@ac-ccq6eni-shard-00-00.jnt0kh7.mongodb.net/husi?retryWrites=true&w=majority', {
