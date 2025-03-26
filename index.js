@@ -9,7 +9,7 @@ const PacienteSchema = new mongoose.Schema({
   nombre: String,
   estado: String
 });
-const Paciente = mongoose.model('pacientes', PacienteSchema);
+const Paciente = mongoose.model('Paciente', PacienteSchema, 'pacientes'); // <- colección explícita
 
 // Conexión a MongoDB Atlas
 mongoose.connect('mongodb://jfgomez4224:6iLNFn2UhbuOpktD@ac-ccq6eni-shard-00-00.jnt0kh7.mongodb.net/husi?retryWrites=true&w=majority', {
@@ -19,9 +19,14 @@ mongoose.connect('mongodb://jfgomez4224:6iLNFn2UhbuOpktD@ac-ccq6eni-shard-00-00.
 .then(() => {
   console.log('✅ Conectado a MongoDB Atlas');
 
-  // Iniciar servidor solo si MongoDB se conectó
-  app.listen(port, () => {
-    console.log(`Servidor corriendo en puerto ${port}`);
+  // Esperar apertura completa
+  mongoose.connection.once('open', () => {
+    console.log('✅ Conexión completamente abierta');
+
+    // Iniciar servidor después de conexión completa
+    app.listen(port, () => {
+      console.log(`Servidor corriendo en puerto ${port}`);
+    });
   });
 })
 .catch(err => {
@@ -33,7 +38,7 @@ app.get('/', (req, res) => {
   res.send('Sistema HUSI funcionando');
 });
 
-// Endpoint real desde MongoDB
+// Endpoint de pacientes
 app.get('/pacientes', async (req, res) => {
   try {
     const pacientes = await Paciente.find();
